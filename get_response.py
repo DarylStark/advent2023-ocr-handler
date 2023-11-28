@@ -1,3 +1,4 @@
+import sys
 from rich.console import Console
 
 if __name__ == '__main__':
@@ -9,8 +10,20 @@ if __name__ == '__main__':
 
     c = Console()
     challenge = c.input('[yellow]Enter challenge: [/yellow]')
-    response = codes.get(challenge)
-    if response:
-        c.print(f'[green]Response:        [b]{response}[/b][/green]')
-    else:
-        c.print('[red]Unknown challenge![/red]')
+    challenges: list[str] = [challenge]
+    if len(challenge) == 9:
+        challenges.clear()
+        for index in range(0, len(challenge) + 1):
+            new_challenge = challenge[0:index] + '0' + challenge[index:]
+            challenges.append(new_challenge)
+    elif len(challenge) != 10:
+        c.print('[red]ERROR, challenge should be 9 or 10 characters long![/]')
+        sys.exit(1)
+
+    c.print()
+    for challenge in challenges:
+        response = codes.get(challenge)
+        if response:
+            c.print(f'\n  [green]{challenge} --> [b]{response}[/b][/green]')
+        else:
+            c.print(f'  [red]{challenge} --> [b]Unknown[/b][/red]')
